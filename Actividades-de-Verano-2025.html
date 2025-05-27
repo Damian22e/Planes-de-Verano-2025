@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Planes Verano 2025 - Cerca de Camping Playa Taray</title>
+<script src="https://cdn.tailwindcss.com/3.4.16"></script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#3b82f6',secondary:'#f59e0b'},borderRadius:{'none':'0px','sm':'4px',DEFAULT:'8px','md':'12px','lg':'16px','xl':'20px','2xl':'24px','3xl':'32px','full':'9999px','button':'8px'}}}}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/4.6.0/remixicon.min.css">
+<style>
+:where([class^="ri-"])::before { content: "\f3c2"; }
+body {
+font-family: 'Montserrat', sans-serif;
+background-color: #f9fafb;
+}
+.activity-card:hover {
+transform: translateY(-5px);
+box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.activity-card {
+transition: all 0.3s ease;
+}
+.map-button:hover {
+transform: translateY(-2px);
+}
+.map-button {
+transition: all 0.2s ease;
+}
+input[type="checkbox"] {
+appearance: none;
+-webkit-appearance: none;
+width: 1.25rem;
+height: 1.25rem;
+border: 2px solid #d1d5db;
+border-radius: 4px;
+outline: none;
+cursor: pointer;
+position: relative;
+}
+input[type="checkbox"]:checked {
+background-color: #3b82f6;
+border-color: #3b82f6;
+}
+input[type="checkbox"]:checked::after {
+content: "";
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+width: 0.5rem;
+height: 0.5rem;
+border-radius: 1px;
+background-color: white;
+}
+.price-tag {
+position: absolute;
+top: 1rem;
+right: 1rem;
+background-color: rgba(0, 0, 0, 0.7);
+color: white;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-weight: 600;
+font-size: 0.875rem;
+}
+.distance-tag {
+position: absolute;
+top: 1rem;
+left: 1rem;
+background-color: rgba(255, 255, 255, 0.9);
+color: #1f2937;
+padding: 0.25rem 0.75rem;
+border-radius: 9999px;
+font-weight: 600;
+font-size: 0.875rem;
+display: flex;
+align-items: center;
+gap: 0.25rem;
+}
+</style>
+</head>
+<body>
+<header class="bg-gradient-to-r from-blue-600 to-blue-800 text-white">
+<div class="container mx-auto px-4 py-12 md:py-16 lg:py-20">
+<div class="max-w-4xl mx-auto text-center">
+<h1 class="text-4xl md:text-5xl font-bold mb-4">Planes Verano 2025</h1>
+<p class="text-xl md:text-2xl mb-8">Cerca de Camping Playa Taray</p>
+<div class="relative max-w-xl mx-auto">
+<div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+<div class="w-5 h-5 flex items-center justify-center text-gray-400">
+<i class="ri-search-line"></i>
+</div>
+</div>
+<input type="text" id="search-input" class="block w-full pl-10 pr-3 py-3 border-none rounded-lg text-gray-900 focus:ring-2 focus:ring-primary focus:outline-none" placeholder="Buscar actividades...">
+</div>
+</div>
+</div>
+</header>
+<main class="container mx-auto px-4 py-12">
+<div class="mb-8">
+<div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+<h2 class="text-2xl font-bold text-gray-800"><i>Ideas para realizar este verano</i></h2>
+<div class="flex items-center gap-4">
+<div class="relative">
+<button id="filter-button" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 !rounded-button whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-filter-3-line"></i>
+</div>
+<span>Filtrar</span>
+</button>
+<div id="filter-dropdown" class="hidden absolute right-0 mt-2 w-64 bg-white rounded-lg shadow-lg z-10 p-4">
+<h3 class="font-semibold mb-3 text-gray-800">Filtrar por:</h3>
+<div class="space-y-3">
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-distance-10" class="filter-checkbox" data-filter="distance" data-value="10">
+<label for="filter-distance-10" class="text-sm text-gray-700">Menos de 10 km</label>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-distance-25" class="filter-checkbox" data-filter="distance" data-value="25">
+<label for="filter-distance-25" class="text-sm text-gray-700">Menos de 25 km</label>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-price-20" class="filter-checkbox" data-filter="price" data-value="20">
+<label for="filter-price-20" class="text-sm text-gray-700">Menos de 20€</label>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-price-50" class="filter-checkbox" data-filter="price" data-value="50">
+<label for="filter-price-50" class="text-sm text-gray-700">Menos de 50€</label>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-family" class="filter-checkbox" data-filter="tag" data-value="family">
+<label for="filter-family" class="text-sm text-gray-700">Para familias</label>
+</div>
+<div class="flex items-center gap-2">
+<input type="checkbox" id="filter-adventure" class="filter-checkbox" data-filter="tag" data-value="adventure">
+<label for="filter-adventure" class="text-sm text-gray-700">Aventura</label>
+</div>
+</div>
+<div class="mt-4 flex justify-end">
+<button id="apply-filters" class="px-4 py-2 bg-primary text-white rounded-button hover:bg-blue-700 !rounded-button whitespace-nowrap">Aplicar</button>
+</div>
+</div>
+</div>
+<div class="relative">
+<button id="sort-button" class="flex items-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-button text-gray-700 hover:bg-gray-50 !rounded-button whitespace-nowrap">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-sort-asc"></i>
+</div>
+<span>Ordenar</span>
+</button>
+<div id="sort-dropdown" class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg z-10">
+<button class="sort-option w-full text-left px-4 py-2 hover:bg-gray-100 text-sm" data-sort="distance">Distancia (más cercano)</button>
+<button class="sort-option w-full text-left px-4 py-2 hover:bg-gray-100 text-sm" data-sort="price-asc">Precio (menor a mayor)</button>
+<button class="sort-option w-full text-left px-4 py-2 hover:bg-gray-100 text-sm" data-sort="price-desc">Precio (mayor a menor)</button>
+</div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="activities-container">
+<!-- Bolera y Recreativos -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="50" data-price="8" data-tags="family,entertainment">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=modern%20bowling%20alley%20with%20colorful%20lanes%2C%20arcade%20games%20in%20the%20background%2C%20people%20enjoying%20bowling%2C%20vibrant%20atmosphere%2C%20evening%20entertainment%20venue&width=600&height=400&seq=1&orientation=landscape" alt="Bolera y Recreativos" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>50 km</span>
+</div>
+<div class="price-tag">Desde 8€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Bolera y Recreativos: Bowling Aqualon</h3>
+<p class="text-gray-600 mb-3">45 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Centro Comercial Aqualon, Av. de la Ría, s/n, 21001 Huelva</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">12 pistas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Recreativos</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Billar</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Bar</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> Desde 8€/persona (bolos), máquinas desde 1€/ficha</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Horario:</span> L-J 17:00–00:00, V-S 17:00–02:00, D 16:00–23:00</p>
+</div>
+<div class="flex items-center gap-4">
+<a href="https://maps.google.com/?q=Centro+Comercial+Aqualon,+Av.+de+la+Ría,+s/n,+21001+Huelva" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<a href="https://www.bowlingaqualon.com" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-global-line"></i>
+</div>
+<span>Sitio web oficial</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Karting -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="8" data-price="15" data-tags="adventure,sports">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=professional%20go-kart%20racing%20track%20with%20colorful%20karts%20racing%20around%2C%20outdoor%20karting%20circuit%20with%20safety%20barriers%2C%20sunny%20day%2C%20speed%20and%20excitement%2C%20people%20enjoying%20karting&width=600&height=400&seq=2&orientation=landscape" alt="Karting" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>8 km</span>
+</div>
+<div class="price-tag">Desde 15€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Karting: Kartódromo de Cartaya</h3>
+<p class="text-gray-600 mb-3">10-15 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Ctra. Cartaya-El Rompido, km 6, 21450 Cartaya</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Pista profesional</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Karts adultos</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Karts niños</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> Desde 15€/persona (10 min)</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Horario verano:</span> 10:00–21:00</p>
+</div>
+<div class="flex items-center gap-4">
+<a href="https://maps.google.com/?q=Ctra.+Cartaya-El+Rompido,+km+6,+21450+Cartaya" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Paintball -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="5" data-price="20" data-tags="adventure,sports,group">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=outdoor%20paintball%20field%20with%20obstacles%2C%20players%20in%20protective%20gear%20shooting%20paintball%20guns%2C%20colorful%20splashes%20of%20paint%2C%20action%20and%20excitement%2C%20team%20sport%20in%20natural%20setting&width=600&height=400&seq=3&orientation=landscape" alt="Paintball" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>5-10 km</span>
+</div>
+<div class="price-tag">Desde 20€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Paintball: Cartaya y El Rompido</h3>
+<p class="text-gray-600 mb-3">10-15 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Cartaya: Ctra. Cartaya-El Rompido, km 7, 21450 Cartaya</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Campos al aire libre</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Equipo incluido</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> Desde 20€/persona (100 bolas)</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Ubicaciones:</span> Cartaya (10 km) y El Rompido (5 km)</p>
+</div>
+<div class="flex justify-between items-center">
+<a href="https://maps.google.com/?q=Ctra.+Cartaya-El+Rompido,+km+7,+21450+Cartaya" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Cine -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="50" data-price="10" data-tags="family,entertainment,indoor">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=modern%20cinema%20theater%20with%20comfortable%20seats%2C%20big%20screen%20showing%20a%20movie%2C%20dimmed%20lights%2C%20people%20watching%20film%2C%20popcorn%20and%20snacks%2C%20entertainment%20venue&width=600&height=400&seq=4&orientation=landscape" alt="Cine" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>50 km</span>
+</div>
+<div class="price-tag">8-10€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Cine: Multicines Aqualon</h3>
+<p class="text-gray-600 mb-3">45 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Centro Comercial Aqualon, Av. de la Ría, s/n, 21001 Huelva</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">8 salas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">4K</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">VOSE</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Snacks</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 8–10€/adultos, 5€/niños</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Cartelera:</span> Consultar estrenos actuales</p>
+</div>
+<div class="flex items-center gap-4">
+<a href="https://maps.google.com/?q=Centro+Comercial+Aqualon,+Av.+de+la+Ría,+s/n,+21001+Huelva" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Parque Acuático -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="12" data-price="25" data-tags="family,water,summer">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=water%20park%20with%20colorful%20water%20slides%2C%20wave%20pool%2C%20childrens%20play%20area%20with%20water%20features%2C%20people%20enjoying%20summer%20day%2C%20families%20having%20fun%2C%20bright%20sunny%20day&width=600&height=400&seq=5&orientation=landscape" alt="Parque Acuático" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>12 km</span>
+</div>
+<div class="price-tag">18-25€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Parque Acuático: Aquopolis Cartaya</h3>
+<p class="text-gray-600 mb-3">15 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Ctra. Cartaya-El Rompido, km 3, 21450 Cartaya</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Toboganes</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Piscina de olas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Zona infantil</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 25€/adultos, 18€/niños</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Temporada:</span> Junio a septiembre</p>
+</div>
+<div class="flex justify-between items-center">
+<a href="https://maps.google.com/?q=Ctra.+Cartaya-El+Rompido,+km+3,+21450+Cartaya" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Motos de Agua -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="5" data-price="60" data-tags="adventure,water,summer">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=jet%20ski%20rental%20on%20beautiful%20beach%2C%20people%20riding%20jet%20skis%20on%20blue%20ocean%20water%2C%20sunny%20day%2C%20water%20sports%2C%20adventure%20activity%2C%20coastal%20scenery&width=600&height=400&seq=6&orientation=landscape" alt="Motos de Agua" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>5-35 km</span>
+</div>
+<div class="price-tag">Desde 60€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Motos de Agua (Alquiler)</h3>
+<p class="text-gray-600 mb-3">Varias ubicaciones cercanas</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<div>
+<p class="text-gray-700">El Rompido/Islantilla: 5–10 km</p>
+<p class="text-gray-700">Punta Umbría: 25 km</p>
+<p class="text-gray-700">Isla Canela: 35 km</p>
+</div>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Alquiler</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Aventura</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Deporte acuático</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> Desde 60€/30 min (2 personas)</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Temporada:</span> Mayo a octubre</p>
+</div>
+<div class="flex justify-between items-center">
+<a href="https://maps.google.com/?q=El+Rompido,+Cartaya" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Pádel -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="5" data-price="15" data-tags="sports,group">
+<div class="relative h-48">
+<img src="https://www.padelen.com/assets/images/instalacion/thumbs/default.jpg" alt="Pistas de pádel" class="w-full h-full object-cover object-center">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>5 km</span>
+</div>
+<div class="price-tag">15€/hora</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Pádel: Club Deportivo El Rompido</h3>
+<p class="text-gray-600 mb-3">10 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Av. del Deporte, 21459 El Rompido, Huelva</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">4 pistas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Iluminación</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Alquiler de palas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Vestuarios</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 15€/hora (pista), 5€/palas, 3€/pelotas</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Horario:</span> 08:00-23:00 (reserva previa recomendada)</p>
+</div>
+<div class="flex items-center gap-4">
+<a href="https://maps.google.com/?q=Club+Deportivo+El+Rompido" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Minigolf -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="3" data-price="12" data-tags="sports,family,group">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=outdoor%20mini%20golf%20course%20with%20creative%20obstacles%2C%20palm%20trees%2C%20well-maintained%20greens%2C%20people%20playing%20mini%20golf%2C%20fun%20activity%20setting%2C%20evening%20lighting&width=600&height=400&seq=9&orientation=landscape" alt="Minigolf" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>3 km</span>
+</div>
+<div class="price-tag">12€/persona</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Minigolf El Rompido</h3>
+<p class="text-gray-600 mb-3">5 min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Paseo Marítimo, El Rompido</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">18 hoyos</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Bar</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Terraza</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 12€/adultos, 8€/niños</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Horario:</span> 16:00-01:00 (verano)</p>
+</div>
+<div class="flex items-center gap-4">
+<a href="https://maps.google.com/?q=El+Rompido+Minigolf" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+<!-- Safari 4x4 Doñana -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="45" data-price="33" data-tags="nature,adventure,photography">
+  <div class="relative h-48">
+    <img src="https://imgcdn.bokun.tools/6979f701-4da6-4c4e-badb-1f761d6d6372.jpeg?w=660&h=660" alt="Safari 4x4 Doñana" class="w-full h-full object-cover object-center">
+    <div class="distance-tag">
+      <div class="w-4 h-4 flex items-center justify-center">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <span>45 km</span>
+    </div>
+    <div class="price-tag">33€/persona</div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-xl font-bold mb-2 text-gray-800">Safari 4x4: Parque Nacional Doñana</h3>
+    <p class="text-gray-600 mb-3">1h en coche desde el camping</p>
+    <div class="flex items-start gap-2 mb-3">
+      <div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <p class="text-gray-700">Centro El Acebuche, 21750 Almonte, Huelva</p>
+    </div>
+    <div class="mb-4">
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Naturaleza</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Aventura</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Guía experto</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Fauna salvaje</span>
+      </div>
+      <p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 33€/adulto, 18€/niño (4h)</p>
+      <p class="text-sm text-gray-700"><span class="font-semibold">Horario:</span> Salidas 09:00 y 16:00 (reserva previa)</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="https://maps.google.com/?q=Centro+de+Visitantes+El+Acebuche+Doñana" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-map-2-line"></i>
+        </div>
+        <span>Ver en Google Maps</span>
+      </a>
+      <a href="https://donanavisitas.es" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-global-line"></i>
+        </div>
+        <span>Sitio web</span>
+      </a>
+      <button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+        <i class="ri-heart-line"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Tirolina y Parque de Aventura -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="1.5" data-price="10" data-tags="adventure,group,nature">
+  <div class="relative h-48">
+    <img src="https://efeagro.com/wp-content/uploads/2022/06/Tirolina.jpg" alt="Tirolina Islantilla" class="w-full h-full object-cover object-center">
+    <div class="distance-tag">
+      <div class="w-4 h-4 flex items-center justify-center">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <span>1.5 km</span>
+    </div>
+    <div class="price-tag">10€/persona</div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-xl font-bold mb-2 text-gray-800">Tirolina y Parque de Aventura Islantilla</h3>
+    <p class="text-gray-600 mb-3">5 min en coche desde el camping</p>
+    <div class="flex items-start gap-2 mb-3">
+      <div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <p class="text-gray-700">Parque El Camaleón, 21449 Islantilla, Huelva</p>
+    </div>
+    <div class="mb-4">
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Tirolina 325m</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Circuitos</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Monitores</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Zona picnic</span>
+      </div>
+      <p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 10€/persona (7.50€ grupos 10+)</p>
+      <p class="text-sm text-gray-700"><span class="font-semibold">Horario verano:</span> 17:00-21:00 (consultar temporada baja)</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="https://maps.google.com/?q=Parque+El+Camaleón+Islantilla" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-map-2-line"></i>
+        </div>
+        <span>Ver en Google Maps</span>
+      </a>
+      <a href="https://www.tirolinadeislantilla.com" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-global-line"></i>
+        </div>
+        <span>Sitio web</span>
+      </a>
+      <button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+        <i class="ri-heart-line"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Colchonetas Hinchables -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="1" data-price="10" data-tags="water,family,kids">
+  <div class="relative h-48">
+    <img src="https://huelvabuenasnoticias.com/wp-content/uploads/2018/06/Ocean-Sea-Park-01-e1527934419262.jpg" alt="Colchonetas acuáticas" class="w-full h-full object-cover object-center">
+    <div class="distance-tag">
+      <div class="w-4 h-4 flex items-center justify-center">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <span>1 km</span>
+    </div>
+    <div class="price-tag">10€/persona</div>
+  </div>
+  <div class="p-5">
+    <h3 class="text-xl font-bold mb-2 text-gray-800">Parque de Colchonetas Acuáticas</h3>
+    <p class="text-gray-600 mb-3">A tan solo 10 min a pie desde el camping</p>
+    <div class="flex items-start gap-2 mb-3">
+      <div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+        <i class="ri-map-pin-line"></i>
+      </div>
+      <p class="text-gray-700">Playa El Rompido, Huelva</p>
+    </div>
+    <div class="mb-4">
+      <div class="flex flex-wrap gap-2 mb-3">
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Zona infantil</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Monitores</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Chalecos salvavidas</span>
+        <span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Acceso directo</span>
+      </div>
+      <p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> 10€/hora por persona (niños 8€)</p>
+      <p class="text-sm text-gray-700"><span class="font-semibold">Horario:</span> 11:00-20:00 (todos los días en temporada)</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <a href="https://maps.google.com/?q=Playa+El+Rompido" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+        <div class="w-5 h-5 flex items-center justify-center">
+          <i class="ri-map-2-line"></i>
+        </div>
+        <span>Ver en Google Maps</span>
+      </a>
+      <button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+        <i class="ri-heart-line"></i>
+      </button>
+    </div>
+  </div>
+</div>
+<!-- Rutas en Quad -->
+<div class="activity-card bg-white rounded-lg overflow-hidden shadow-md" data-distance="90" data-price="50" data-tags="adventure,nature,group">
+<div class="relative h-48">
+<img src="https://readdy.ai/api/search-image?query=quad%20biking%20adventure%20in%20mountainous%20terrain%2C%20group%20of%20people%20riding%20ATVs%20on%20dirt%20trails%20through%20forest%2C%20scenic%20mountain%20views%2C%20outdoor%20adventure%20activity%2C%20guided%20tour&width=600&height=400&seq=7&orientation=landscape" alt="Rutas en Quad" class="w-full h-full object-cover object-top">
+<div class="distance-tag">
+<div class="w-4 h-4 flex items-center justify-center">
+<i class="ri-map-pin-line"></i>
+</div>
+<span>90 km</span>
+</div>
+<div class="price-tag">Desde 50€</div>
+</div>
+<div class="p-5">
+<h3 class="text-xl font-bold mb-2 text-gray-800">Rutas en Quad (Sierra de Huelva)</h3>
+<p class="text-gray-600 mb-3">1h 30min en coche desde el camping</p>
+<div class="flex items-start gap-2 mb-3">
+<div class="w-5 h-5 flex items-center justify-center text-gray-500 mt-0.5">
+<i class="ri-map-pin-line"></i>
+</div>
+<p class="text-gray-700">Aracena/Alájar: 90 km</p>
+</div>
+<div class="mb-4">
+<div class="flex flex-wrap gap-2 mb-3">
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Rutas guiadas</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Sierra</span>
+<span class="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded">Aventura</span>
+</div>
+<p class="text-sm text-gray-700 mb-2"><span class="font-semibold">Precios:</span> Desde 50€/persona (2–3 h)</p>
+<p class="text-sm text-gray-700"><span class="font-semibold">Incluye:</span> Equipamiento, seguro y guía</p>
+</div>
+<div class="flex justify-between items-center">
+<a href="https://maps.google.com/?q=Aracena,+Huelva" target="_blank" class="map-button flex items-center gap-1.5 text-primary hover:text-blue-700">
+<div class="w-5 h-5 flex items-center justify-center">
+<i class="ri-map-2-line"></i>
+</div>
+<span>Ver en Google Maps</span>
+</a>
+<button class="favorite-button w-8 h-8 flex items-center justify-center text-gray-400 hover:text-red-500">
+<i class="ri-heart-line"></i>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</main>
+<footer class="bg-gray-800 text-white mt-16">
+<div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400 text-sm">
+<p>© 2025 Camping Playa Taray. Todos los derechos reservados.</p>
+</div>
+</footer>
+<button id="back-to-top" class="fixed bottom-8 right-8 bg-primary text-white p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300">
+<div class="w-6 h-6 flex items-center justify-center">
+<i class="ri-arrow-up-line"></i>
+</div>
+</button>
+<script id="dropdown-handlers">
+document.addEventListener('DOMContentLoaded', function() {
+const filterButton = document.getElementById('filter-button');
+const filterDropdown = document.getElementById('filter-dropdown');
+const sortButton = document.getElementById('sort-button');
+const sortDropdown = document.getElementById('sort-dropdown');
+// Filter dropdown toggle
+filterButton.addEventListener('click', function() {
+filterDropdown.classList.toggle('hidden');
+sortDropdown.classList.add('hidden');
+});
+// Sort dropdown toggle
+sortButton.addEventListener('click', function() {
+sortDropdown.classList.toggle('hidden');
+filterDropdown.classList.add('hidden');
+});
+// Close dropdowns when clicking outside
+document.addEventListener('click', function(event) {
+if (!filterButton.contains(event.target) && !filterDropdown.contains(event.target)) {
+filterDropdown.classList.add('hidden');
+}
+if (!sortButton.contains(event.target) && !sortDropdown.contains(event.target)) {
+sortDropdown.classList.add('hidden');
+}
+});
+// Sort options
+const sortOptions = document.querySelectorAll('.sort-option');
+sortOptions.forEach(option => {
+option.addEventListener('click', function() {
+const sortType = this.getAttribute('data-sort');
+sortActivities(sortType);
+sortDropdown.classList.add('hidden');
+});
+});
+// Apply filters
+const applyFiltersButton = document.getElementById('apply-filters');
+applyFiltersButton.addEventListener('click', function() {
+applyFilters();
+filterDropdown.classList.add('hidden');
+});
+});
+</script>
+<script id="activity-filtering-sorting">
+document.addEventListener('DOMContentLoaded', function() {
+// Sort activities
+function sortActivities(sortType) {
+const container = document.getElementById('activities-container');
+const activities = Array.from(container.children);
+activities.sort((a, b) => {
+if (sortType === 'distance') {
+const distanceA = parseInt(a.getAttribute('data-distance'));
+const distanceB = parseInt(b.getAttribute('data-distance'));
+return distanceA - distanceB;
+} else if (sortType === 'price-asc') {
+const priceA = parseInt(a.getAttribute('data-price'));
+const priceB = parseInt(b.getAttribute('data-price'));
+return priceA - priceB;
+} else if (sortType === 'price-desc') {
+const priceA = parseInt(a.getAttribute('data-price'));
+const priceB = parseInt(b.getAttribute('data-price'));
+return priceB - priceA;
+}
+return 0;
+});
+// Clear container
+while (container.firstChild) {
+container.removeChild(container.firstChild);
+}
+// Append sorted activities
+activities.forEach(activity => {
+container.appendChild(activity);
+});
+}
+// Apply filters
+function applyFilters() {
+const container = document.getElementById('activities-container');
+const activities = Array.from(container.children);
+const checkboxes = document.querySelectorAll('.filter-checkbox:checked');
+// Show all activities first
+activities.forEach(activity => {
+activity.classList.remove('hidden');
+});
+// If no filters selected, return
+if (checkboxes.length === 0) return;
+// Apply filters
+activities.forEach(activity => {
+const distance = parseInt(activity.getAttribute('data-distance'));
+const price = parseInt(activity.getAttribute('data-price'));
+const tags = activity.getAttribute('data-tags').split(',');
+let shouldShow = false;
+let hasDistanceFilter = false;
+let hasPriceFilter = false;
+let hasTagFilter = false;
+checkboxes.forEach(checkbox => {
+const filterType = checkbox.getAttribute('data-filter');
+const filterValue = checkbox.getAttribute('data-value');
+if (filterType === 'distance') {
+hasDistanceFilter = true;
+if (distance <= parseInt(filterValue)) {
+shouldShow = true;
+}
+} else if (filterType === 'price') {
+hasPriceFilter = true;
+if (price <= parseInt(filterValue)) {
+shouldShow = true;
+}
+} else if (filterType === 'tag') {
+hasTagFilter = true;
+if (tags.includes(filterValue)) {
+shouldShow = true;
+}
+}
+});
+// Hide if doesn't match any filter of each type that's active
+if ((hasDistanceFilter && !shouldShow) ||
+(hasPriceFilter && !shouldShow) ||
+(hasTagFilter && !shouldShow)) {
+activity.classList.add('hidden');
+}
+});
+}
+// Make functions available globally
+window.sortActivities = sortActivities;
+window.applyFilters = applyFilters;
+});
+</script>
+<script id="search-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const searchInput = document.getElementById('search-input');
+searchInput.addEventListener('input', function() {
+const searchTerm = this.value.toLowerCase();
+const activities = document.querySelectorAll('.activity-card');
+activities.forEach(activity => {
+const title = activity.querySelector('h3').textContent.toLowerCase();
+const description = activity.querySelector('p').textContent.toLowerCase();
+const tags = activity.getAttribute('data-tags').toLowerCase();
+if (title.includes(searchTerm) || description.includes(searchTerm) || tags.includes(searchTerm)) {
+activity.classList.remove('hidden');
+} else {
+activity.classList.add('hidden');
+}
+});
+});
+});
+</script>
+<script id="favorite-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const favoriteButtons = document.querySelectorAll('.favorite-button');
+favoriteButtons.forEach(button => {
+button.addEventListener('click', function() {
+const icon = this.querySelector('i');
+if (icon.classList.contains('ri-heart-line')) {
+icon.classList.remove('ri-heart-line');
+icon.classList.add('ri-heart-fill');
+this.classList.add('text-red-500');
+} else {
+icon.classList.remove('ri-heart-fill');
+icon.classList.add('ri-heart-line');
+this.classList.remove('text-red-500');
+}
+});
+});
+});
+</script>
+<script id="back-to-top-functionality">
+document.addEventListener('DOMContentLoaded', function() {
+const backToTopButton = document.getElementById('back-to-top');
+window.addEventListener('scroll', function() {
+if (window.pageYOffset > 300) {
+backToTopButton.classList.remove('opacity-0', 'invisible');
+backToTopButton.classList.add('opacity-100', 'visible');
+} else {
+backToTopButton.classList.remove('opacity-100', 'visible');
+backToTopButton.classList.add('opacity-0', 'invisible');
+}
+});
+backToTopButton.addEventListener('click', function() {
+window.scrollTo({
+top: 0,
+behavior: 'smooth'
+});
+});
+});
+</script>
+</body>
+</html>
